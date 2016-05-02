@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>862156b9-96a7-4f85-bb66-b7ec70418cf7</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>pykinect2\FingerTracking.py</StartupFile>
+    <StartupFile>pykinect2\FingerTrackingOpenCV.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -26,6 +26,7 @@
     <Compile Include="pykinect2/PyKinectRuntime.py" />
     <Compile Include="pykinect2/PyKinectV2.py" />
     <Compile Include="pykinect2\FingerTracking.py" />
+    <Compile Include="pykinect2\FingerTrackingOpenCV.py" />
     <Compile Include="pykinect2\PyKinectBodyGame.py" />
     <Compile Include="pykinect2\PyKinectInfraRed.py" />
   </ItemGroup>

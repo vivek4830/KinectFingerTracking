@@ -7,6 +7,8 @@ import _ctypes
 import pygame
 import sys
 import thread
+import matplotlib
+import numpy
 
 # colors for drawing different bodies 
 SKELETON_COLORS = [pygame.color.THECOLORS["red"], 
@@ -38,13 +40,13 @@ class FingerTrackingRuntime(object):
         # Screen and window information
         self._frame_width = self._kinect.color_frame_desc.Width;
         self._frame_height = self._kinect.color_frame_desc.Height;
-        self._screen_width = self._frame_width + 300
-        self._screen_height = self._frame_height + 300
+        self._screen_width = self._frame_width + 500
+        self._screen_height = self._frame_height
 
         # Screen and window surfaces
         self._screen = pygame.display.set_mode((self._screen_width, self._screen_height), pygame.HWSURFACE|pygame.DOUBLEBUF, 32)
         self._frame_surface = pygame.Surface((self._kinect.color_frame_desc.Width, self._kinect.color_frame_desc.Height), 0, 32)
-        self._hand_surface = pygame.Surface((300, 300), 0, 32)
+        self._hand_surface = pygame.Surface((500, 500), 0, 32)
 
         self._image_array = []
 
@@ -54,8 +56,13 @@ class FingerTrackingRuntime(object):
         ctypes.memmove(address, frame.ctypes.data, frame.size)
         del address
         target_surface.unlock()
-        small_image = pygame.surfarray.pixels2d(self._frame_surface)
-        
+        subimage = pygame.Rect(1400, 500, 500, 500)
+        sample = pygame.Rect(1600, 700, 50, 50)
+        average_color = pygame.transform.average_color(self._frame_surface, sample)
+        pygame.transform.threshold(self._hand_surface, self._frame_surface.subsurface(subimage), average_color, (40, 40, 40), (0,0,0), 1)
+
+        hand_array = pygame.surfarray.array3d(self._hand_surface)
+        thresholded = numpy.ceil(hand_array, 1)
 
 
     def run(self):
@@ -82,7 +89,7 @@ class FingerTrackingRuntime(object):
             target_height = int(h_to_w * self._screen.get_width())
             surface_to_draw = pygame.transform.scale(self._frame_surface, (self._screen.get_width(), target_height));
             self._screen.blit(self._frame_surface, (0,0))
-            self._screen.blit(self._hand_surface, (self._frame_width, self._frame_height))
+            self._screen.blit(self._hand_surface, (self._frame_width, 0))
             
             surface_to_draw = None
             pygame.display.update()
@@ -100,4 +107,3 @@ class FingerTrackingRuntime(object):
 __main__ = "Kinect Finger Tracking"
 game = FingerTrackingRuntime();
 game.run();
-
